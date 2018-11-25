@@ -1,21 +1,4 @@
-## Writeup Template
-
-### You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
----
-
 **Advanced Lane Finding Project**
-
-The goals / steps of this project are the following:
-
-* Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
-* Apply a distortion correction to raw images.
-* Use color transforms, gradients, etc., to create a thresholded binary image.
-* Apply a perspective transform to rectify binary image ("birds-eye view").
-* Detect lane pixels and fit to find the lane boundary.
-* Determine the curvature of the lane and vehicle position with respect to center.
-* Warp the detected lane boundaries back onto the original image.
-* Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
 [//]: # (Image References)
 
@@ -27,7 +10,38 @@ The goals / steps of this project are the following:
 [image6]: ./examples/example_output.jpg "Output"
 [video1]: ./project_video.mp4 "Video"
 
-## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
+The first solution to finding lanes on the road utilised a pipeline which:
+1. Read the raw image into a computable array format (based on RGB encodings)
+2. Region masking the images to select only the area of interest
+3. Detecting lines using the OpenCV canny edge detection and after applying a custom Gaussian smoothing factor and greyscale 
+4. Applying a Hough transform to the edge detected image to select only the lane lines
+5. Highligting the lane lines in the image and extrapolating them to the edge of the area of interest
+
+However, it was not a production ready method of processing as it didn't always find the lane lines correctly - and in some cases found incorrect lines. It goes without saying that in the real world this could cause automated navigation systems to crash or be otherwise unreliable.
+
+Below is an updated method for finding correct lane lines based which:
+1. Eliminates distortion from the camera
+2. Improves lane detection via
+    * Analysis based on alternate colour spaces
+    * Improved edge detection using Sobel operators
+    * Image perspective transformation and transformed image histograms 
+
+
+
+* Compute the camera calibration matrix and distortion coefficients given a set of chessboard images.
+* Apply a distortion correction to raw images.
+* Use color transforms, gradients, etc., to create a thresholded binary image.
+* Apply a perspective transform to rectify binary image ("birds-eye view").
+* Detect lane pixels and fit to find the lane boundary.
+* Determine the curvature of the lane and vehicle position with respect to center.
+* Warp the detected lane boundaries back onto the original image.
+* Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
+
+
+#### Step 1 - Detecting and eliminating camera distortion
+
+
+
 
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
