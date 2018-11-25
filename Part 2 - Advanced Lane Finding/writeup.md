@@ -2,8 +2,8 @@
 
 [//]: # (Image References)
 
-[image1]: ./examples/undistort_output.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
+[image1]: ./camera_cal/calibration1.jpg "Sample Test Image"
+[image2]: ./camera_cal/calibration1_undist.jpg "Undistorted"
 [image3]: ./examples/binary_combo_example.jpg "Binary Example"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
@@ -38,47 +38,39 @@ Below is an updated method for finding correct lane lines based which:
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
 
-#### Step 1 - Detecting and eliminating camera distortion
-
-
-
-
-### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
-
+### Step 1 - Detecting and eliminating camera distortion
 ---
+The code for this step is contained in the first code cell of the IPython notebook located in "./P2_Solution.ipynb". I started by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
-### Writeup / README
-
-#### 1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
-
-You're reading it!
-
-### Camera Calibration
-
-#### 1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
-
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
-
-I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
-
-I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
+I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to a distorted test image:
 
 ![alt text][image1]
 
-### Pipeline (single images)
+using the `cv2.undistort()` function and obtained this result:
 
-#### 1. Provide an example of a distortion-corrected image.
-
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
 ![alt text][image2]
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+### Step 2. Image Pipeline processing for detecting lane lines
+
+The code for this step is contained in the third code cell of the IPython notebook located in "./P2_Solution.ipynb". The second cell shows the previous pipeline for reference while the third shows a modified version which uses more advanced techniques to accomplish a better detection result. 
+
+#### Perspective Transformation
+The first technique employed that was different from the original pipeline was the use of a perspective transform. The perspective transform gives a birds eye view of the area of interest and allows for more accurate determination of the lane lines. An example of the transformation from one of the images is below:
 
 ![alt text][image3]
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+#### Color Spaces and Thresholds
+
+The next technique employed was to analyse the perspective transformed image through a variety of colour spaces. More specifically the pipeline uses the RGB, HSL, LAB and YCrCb colour spaces. Each colour space was tweaked using its own threshold in order to maximise the probability of lane line detection and in some cases (like RGB) each color space was given its own threshold. 
+
+An example of the output results from various colour spaces is shown here:
+
+![alt text][image3]
+
+Once this was done the colour spaces were also analysed manually to understand which channels gave the best overall detection rate on the sample image data. These images were then combined into a binary image composite of multiple channels. An example of the composite image from the above color spaces is shown below:
+
+![alt text][image3]
 
 The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
 
