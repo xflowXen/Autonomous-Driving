@@ -4,10 +4,12 @@
 
 [image1]: ./camera_cal/calibration1.jpg "Sample Test Image"
 [image2]: ./camera_cal/calibration1_undist.jpg "Undistorted"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
+[image3]: ./examples/ptransform.png "Perspective Transformation"
+[image4]: ./examples/channels.png "Colour Channels"
+[image5]: ./examples/gradient.png "Gradient Detection"
+[image6]: ./examples/combined.png "Combined Binary"
+[image7]: ./examples/lanedetect.png "Detected Curve"
+[image8]: ./examples/overlay.png "Final Image"
 
 The first solution to finding lanes on the road utilised a pipeline which:
 1. Read the raw image into a computable array format (based on RGB encodings)
@@ -67,9 +69,22 @@ An example of the output results from various colour spaces is shown here:
 
 ![alt text][image4]
 
-Once this was done the colour spaces were also analysed manually to understand which channels gave the best overall detection rate on the sample image data. These images were then combined into a binary image composite of multiple channels. An example of the composite image from the above color spaces is shown below:
+#### Gradient analysis
+
+The next tehnique employed on the perspective transformed image was gradient analysis using the Sobel operator. An example of the binary output from this gradient analysis is shown below:
 
 ![alt text][image5]
+
+This operator was very good at delineating gradients where there was a strong contrast between the colour of the lane line and of the road - however, whenever the colour difference was small and especially where the image became blurred due to the perspective transform - gradient analysis became less and less useful.
+
+This suggests that other image processing techniques such as image enhancement and colour correction may be important analyses to include in the pipeline. 
+
+#### Combined Analysis
+All of the images generated from the perspective tranformed colour and gradient analysis was then fused into a single binary image. The code for this can also be seen in the third  code cell of the solution notebook but an example is provided below:
+
+An example of the composite image from the above color spaces is shown below:
+
+![alt text][image6]
 
 The highest probability channels on the test set turned out to be the:
 
@@ -79,21 +94,6 @@ Lightness from the LAB space and
 Chroma (Y) channel from the YCbCr space.
 
 Its worth noting that some of these channels are quite similar and attempt to replicate the way that human vision works. Its important to also note that our brain does also do alot of other types of processing (like "filling in the blanks" that can't be fully replicated by analysis of color space alone.
-
-Its for this reason that a gradient analysis was also employed using the Sobel operator.
-
-#### Gradient analysis
-
-The next tehnique employed on the perspective transformed image was gradient analysis using the Sobel operator. An example of the binary output from this gradient analysis is shown below:
-
-![alt text][image6]
-
-This operator was very good at delineating gradients where there was a strong contrast between the colour of the lane line and of the road - however, whenever the colour difference was small and especially where the image became blurred due to the perspective transform - gradient analysis became less and less useful.
-
-This suggests that other image processing techniques such as image enhancement and colour correction may be important analyses to include in the pipeline. 
-
-#### Combined Analysis
-All of the images generated from the perspective tranformed colour and gradient analysis was then fused into a single binary image. The code for this can also be seen in the third  code cell of the solution notebook but an example is provided below:
 
 
 #### Lane Line and Lane Curvature detection
