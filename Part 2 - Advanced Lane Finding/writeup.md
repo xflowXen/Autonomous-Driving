@@ -8,7 +8,6 @@
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
 [image5]: ./examples/color_fit_lines.jpg "Fit Visual"
 [image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
 
 The first solution to finding lanes on the road utilised a pipeline which:
 1. Read the raw image into a computable array format (based on RGB encodings)
@@ -66,68 +65,66 @@ The next technique employed was to analyse the perspective transformed image thr
 
 An example of the output results from various colour spaces is shown here:
 
-![alt text][image3]
+![alt text][image4]
 
 Once this was done the colour spaces were also analysed manually to understand which channels gave the best overall detection rate on the sample image data. These images were then combined into a binary image composite of multiple channels. An example of the composite image from the above color spaces is shown below:
 
-![alt text][image3]
-
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
-
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
-
-This resulted in the following source and destination points:
-
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
-
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
-
-![alt text][image4]
-
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
-
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
-
 ![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+The highest probability channels on the test set turned out to be the:
 
-I did this in lines # through # in my code in `my_other_file.py`
+Red and Green channels from the RGB space,
+Saturation and Lightness from the HSL space,
+Lightness from the LAB space and 
+Chroma (Y) channel from the YCbCr space.
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+Its worth noting that some of these channels are quite similar and attempt to replicate the way that human vision works. Its important to also note that our brain does also do alot of other types of processing (like "filling in the blanks" that can't be fully replicated by analysis of color space alone.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+Its for this reason that a gradient analysis was also employed using the Sobel operator.
+
+#### Gradient analysis
+
+The next tehnique employed on the perspective transformed image was gradient analysis using the Sobel operator. An example of the binary output from this gradient analysis is shown below:
 
 ![alt text][image6]
 
+This operator was very good at delineating gradients where there was a strong contrast between the colour of the lane line and of the road - however, whenever the colour difference was small and especially where the image became blurred due to the perspective transform - gradient analysis became less and less useful.
+
+This suggests that other image processing techniques such as image enhancement and colour correction may be important analyses to include in the pipeline. 
+
+#### Combined Analysis
+All of the images generated from the perspective tranformed colour and gradient analysis was then fused into a single binary image. The code for this can also be seen in the third  code cell of the solution notebook but an example is provided below:
+
+
+#### Lane Line and Lane Curvature detection
+Once the final image that provided a high probability of line detection was generated - the pipeline then performed a detection of the lines by generating a histogram of the binary image. As expected, this resulted in the most results being detected in the range of pixels where the lane lines were. 
+
+This information was then used to deduce where the lane lines were and to generate a sliding window of detecting "on" pixels in the binary image. 9 windows were used in total to split the identified lines into segments for more accurate detection. An example of the binary image showing the detection points is below:
+
+This image data was then used to generate a curve (instead of a line in the previous example) by using the cv2.polylines function (see code cell 3). The curve generated defined a curve with the form y = x^2 + bx + c which allowed the lane curvature to be calculated as in the example below:
+
+![alt text][image7]
+
+
+### Lane Line Perspective 
+Once the polynomial curve had been detected - it was drawn on the perspective transformed image and then finally reverted back to its original perspective as shown below:
+
+![alt text][image8]
+
 ---
 
-### Pipeline (video)
+### Pipeline Video Example
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
-
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to the final video result](./output_video/project_video.mp4)
 
 ---
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+The above process highlights the method of determining lane lines using advanced methods. However, these methods are still quite static. 
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+In the test cases where the road is quite light and matches the color spaces, however, more advanced methods will need to be employed such as glare detection and reduction and increasing the contrast of images as a pre-processing step. The process above was able to generate a high quality image without resorting to using the Sobel operator as the additional color spaces provided enough accurate data to determine the lane lines but with good image pre-processing it would be possible to rely on this operator for higher probability detections.
+
+Additionally, as the conditions are subject to change requiring different thresholding values for effective detection - a better approach may be identfying the unique range of conditions that the car will need to be driven under - collect data for each of these conditions and then employing neural networks which are flexible enough to detect the lane lines under each given condition.
+
+The pipeline as defined above is also inefficient and can be sped up if a more robust image processing method were used.
