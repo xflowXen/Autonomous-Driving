@@ -1,0 +1,2 @@
+model_checkpoint_path: "lenet-test"
+all_model_checkpoint_paths: "lenet-test"
