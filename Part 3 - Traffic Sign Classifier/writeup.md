@@ -3,11 +3,11 @@
 [image1]: ./images/CHistogram.png "Histogram"
 [image2]: ./images/original.png "Original"
 [image3]: ./images/normalised.png "Greyscaling"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
+[image4]: ./images/gts1.png "Traffic Sign 1"
+[image5]: ./images/gts2.png "Traffic Sign 2"
+[image6]: ./images/gts3.png "Traffic Sign 3"
+[image7]: ./images/gts4.png "Traffic Sign 4"
+[image8]: ./images/gts5.png "Traffic Sign 5"
 
 
 # **Traffic Sign Recognition** 
@@ -63,51 +63,53 @@ Here is an example of a traffic sign image before and after grayscaling.
 
 
 
-#### 2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+#### 2. Neural Network Architecture
 
 My final model consisted of the following layers:
 
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
+| Convolution 8x8     	| 1x1 stride, valid padding, outputs 25x25x10 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|												|
-|						|												|
+| Max pooling	      	| 2x2 stride,  outputs 12x12x10				|
+| Convolution 4x4     	| 1x1 stride, valid padding, outputs 9x9x30 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride,  outputs 4x4x30				|
+| Fully connected		| flattend 480       									|
+| Fully connected		| flattend 172       									|
+| Fully connected		| flattend 86       									|
+| Output 	| flattened 43      									|
+
+
+
+#### 3. Neural Net Training
+
+To train the model, I tested various optimisers - the Adagrad and adadelta as well as the Adam optimiser. Over many trials there were many bad optimisations around the 4.5 and 5.4% accuracy points. However, the Adam optimiser with a small initial value (0.0001 and below) and a rho(decay) of around 0.9-0.99 performed best against a batch size of 100. It wasn't generally necessary to train beyond 20 - 25 epochs and the best accuracies (high of 94.1%) were typically obtained by the 10th epoch.
+
+The best combination of points was:
+Optimizer - AdamOptimiser
+Learning Rate - 0.0006
+Rho - 0.97
+Batch size - 1000
+
+It yielded a 99.1% accuracy rate in training and a 94.1% rate in validation along with a 91% accuracy rate against the test set.
+
+#### 4. Optimisation Approach
+To find the optimal values above, I constructed a grid with differing sizes of Batches, Epochs, Learning rates and other hyperparameters. I then updated each parameter around a range until it yielded no further change (positive or negative) to determine the optimal starting points and ranges to choose for each optimiser.
+
+After that initial analysis, I focused on the optimiser, batch, epoch, learning rate and hyper parameter that gave the best results across the board and used that as a starting point to begin tweaking the values.
+
+The rationale for this approach is that an optimisation is like a search space - by doing the inital analysis I was able to find a set of variables which gave a pretty good estimate of the minimum loss and helped the optimiser to more quickly locate the area of the search space that was best for starting optimisation in a similar way to a Stochastic Gradient Descent algorithm would.
+
+I also changed the convolution amount in a way that would give the convolutional layers the best chance of detecting features based on the 32x32 image size. Starting with a 2x2 grid didn't make sense as the recognisatble features tended to span 4-8 pixels on average. 
+
+The results with this approach were good but could be improved by adding a dropout layer to avoid overfitting against the data.
  
 
+### Testing Model on New Images
 
-#### 3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-To train the model, I used an ....
-
-#### 4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
-
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
-
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
-
-### Test a Model on New Images
-
-#### 1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
+#### 1. Real world test (Kind of)
 
 Here are five German traffic signs that I found on the web:
 
