@@ -1,3 +1,15 @@
+[//]: # (Image References)
+
+[image1]: ./images/CHistogram.png "Histogram"
+[image2]: ./images/original.png "Original"
+[image3]: ./images/normalised.png "Greyscaling"
+[image4]: ./examples/placeholder.png "Traffic Sign 1"
+[image5]: ./examples/placeholder.png "Traffic Sign 2"
+[image6]: ./examples/placeholder.png "Traffic Sign 3"
+[image7]: ./examples/placeholder.png "Traffic Sign 4"
+[image8]: ./examples/placeholder.png "Traffic Sign 5"
+
+
 # **Traffic Sign Recognition** 
 
 ---
@@ -13,16 +25,7 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
-[//]: # (Image References)
 
-[image1]: ./images/Classifier Histogram.png "Histogram"
-[image2]: ./images/original.png "Original"
-[image3]: ./images/normalised.png "Greyscaling"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 ### Traffic Classifier Overview
 
