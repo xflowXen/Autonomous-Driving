@@ -24,7 +24,6 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
----
 ### Traffic Classifier Overview
 
 ### Data Set Summary & Exploration
