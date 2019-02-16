@@ -26,7 +26,7 @@ The following files have been included:
 **Model and Code Files**
 * [model.py](model.py) - The script to create and train the model
 * [drive.py](drive.py) - script to be used to drive the car in autonomous mode
-* [model.h5](models/model.h5)  - contains a trained neural network
+* [model.h5](https://www.dropbox.com/s/5ra5jny2rymtaet/model.h5?dl=0)  - contains a trained neural network
 
 **Videos of Autonomous driving with the model**
 * [Track 1](https://youtu.be/ZsfDXsD4Anc) - Shows the model driving around track 1
