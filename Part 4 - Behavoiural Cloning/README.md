@@ -29,7 +29,7 @@ The following files have been included:
 * [model.h5](models/model.h5)  - contains a trained neural network
 
 **Videos of Autonomous driving with the model**
-* [Track 1](video/track1.avi) - Shows the model driving around track 1
+* [Track 1](https://youtu.be/ZsfDXsD4Anc) - Shows the model driving around track 1
 * [Track 2](video/track2.avi) - Shows the model attempting to drive around track 2
 
 **Writeup and Analysis**
