@@ -84,7 +84,7 @@ The final model architecture can be seen in using one of the formats below:
 
 In addition the performance of this model on the tracks can be seen in the videos below:
 
-* [Track 1](video/track1.avi)
+* [Track 1](https://www.youtube.com/watch?v=ZsfDXsD4Anc&t=63s)
 * [Track 2 Attempt](video/track2.avi)
 
 ----
