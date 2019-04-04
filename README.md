@@ -6,3 +6,4 @@ Coursework for Udacity's Self Driving Engineer NanoDegree
 * [Part 2 - Advanced Lane Finding](https://github.com/xyGZen/Autonomous-Driving/blob/master/Part%202%20-%20Advanced%20Lane%20Finding/P2_Solution.ipynb)
 * [Part 3 - Traffic Sign Recognition](https://github.com/xyGZen/Autonomous-Driving/blob/master/Part%203%20-%20Traffic%20Sign%20Classifier/writeup.md)
 * [Part 4 - Behavioural Cloning](https://github.com/xyGZen/Autonomous-Driving/blob/master/Part%204%20-%20Behavoiural%20Cloning/README.md)
+* [Part 5 - Extended Kalman Filters](https://github.com/xyGZen/Autonomous-Driving/tree/master/Part%205%20-%20Extended%20Kalman%20Filters)
